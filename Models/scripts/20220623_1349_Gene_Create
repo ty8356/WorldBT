@@ -1,0 +1,5 @@
+CREATE TABLE [Gene] (
+    [Id] uniqueidentifier NOT NULL CONSTRAINT PK_Gene_Id PRIMARY KEY DEFAULT NEWID()
+    ,[EntrezId] int NOT NULL
+    ,[Name] nvarchar(80) NULL
+)

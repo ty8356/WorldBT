@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OfficeOpenXml;
 
-namespace WorldBT.ExcelDataInsert
+namespace WorldBT.ExcelDbInsert
 {
     public static class ExcelExtensions
     {

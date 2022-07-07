@@ -1,0 +1,42 @@
+CREATE TABLE [Histology] (
+    [Id] int NOT NULL CONSTRAINT PK_Histology_Id PRIMARY KEY IDENTITY(1, 1)
+    ,[Name] nvarchar(30) NULL
+)
+
+CREATE TABLE [Subgroup] (
+    [Id] int NOT NULL CONSTRAINT PK_Subgroup_Id PRIMARY KEY IDENTITY(1, 1)
+    ,[Name] nvarchar(30) NULL
+)
+
+CREATE TABLE [Location] (
+    [Id] int NOT NULL CONSTRAINT PK_Location_Id PRIMARY KEY IDENTITY(1, 1)
+    ,[Name] nvarchar(100) NULL
+)
+
+CREATE TABLE [TissueType] (
+    [Id] int NOT NULL CONSTRAINT PK_TissueType_Id PRIMARY KEY IDENTITY(1, 1)
+    ,[Name] nvarchar(30) NULL
+)
+
+-- INSERT INTO Histology (Name)
+-- VALUES ('PH/PG')
+-- INSERT INTO Histology (Name)
+-- VALUES ('MEN')
+-- INSERT INTO Histology (Name)
+-- VALUES ('GBM')
+-- INSERT INTO Histology (Name)
+-- VALUES ('A')
+-- INSERT INTO Histology (Name)
+-- VALUES ('EPN')
+-- INSERT INTO Histology (Name)
+-- VALUES ('haemangioblastoma')
+-- INSERT INTO Histology (Name)
+-- VALUES ('PA')
+-- INSERT INTO Histology (Name)
+-- VALUES ('Non-tumor')
+-- INSERT INTO Histology (Name)
+-- VALUES ('OD')
+-- INSERT INTO Histology (Name)
+-- VALUES ('OA')
+-- INSERT INTO Histology (Name)
+-- VALUES ('PA')

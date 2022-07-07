@@ -1,0 +1,6 @@
+CREATE TABLE [TsneCoordinate] (
+    [Id] uniqueidentifier NOT NULL CONSTRAINT PK_TsneCoordinate_Id PRIMARY KEY DEFAULT NEWID()
+    ,[PatientId] uniqueidentifier NOT NULL CONSTRAINT FK_TsneCoordinate_Patient_PatientId FOREIGN KEY REFERENCES [Patient](Id)
+    ,[X] decimal(12,9) NOT NULL
+    ,[Y] decimal(12,9) NOT NULL 
+)

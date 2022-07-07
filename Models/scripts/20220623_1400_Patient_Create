@@ -1,0 +1,9 @@
+CREATE TABLE [Patient] (
+    [Id] uniqueidentifier NOT NULL CONSTRAINT PK_Patient_Id PRIMARY KEY DEFAULT NEWID()
+    ,[FileName] nvarchar(200) NOT NULL UNIQUE
+    ,[DatasetId] uniqueidentifier NOT NULL CONSTRAINT FK_Patient_Dataset_DatasetId FOREIGN KEY REFERENCES [Dataset](Id)
+    ,[HistologyId] int NOT NULL CONSTRAINT FK_Patient_Histology_HistologyId FOREIGN KEY REFERENCES [Histology](Id)
+    ,[SubgroupId] int NOT NULL CONSTRAINT FK_Patient_Subgroup_SubgroupId FOREIGN KEY REFERENCES [Subgroup](Id)
+    ,[LocationId] int NOT NULL CONSTRAINT FK_Patient_Location_LocationId FOREIGN KEY REFERENCES [Location](Id)
+    ,[TissueTypeId] int NOT NULL CONSTRAINT FK_Patient_TissueType_TissueTypeId FOREIGN KEY REFERENCES [TissueType](Id)
+)
