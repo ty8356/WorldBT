@@ -27,10 +27,14 @@ namespace WorldBT.ExcelDbInsert
         public void Execute()
         {
             InsertMetaData();
+
+            InsertGenomics();
         }
 
         private void InsertMetaData()
         {
+            Console.WriteLine("Starting metadata file insert...");
+
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             var file = new FileInfo("files/MetaData.xlsx");
@@ -59,7 +63,7 @@ namespace WorldBT.ExcelDbInsert
 
                     for (int i = 2; i <= totalRows; i++)
                     {
-                        Console.WriteLine($"Found patient with file name: {worksheet.Cells[i, columns["filename"]]?.Value?.ToString() ?? ""}.");
+                        // Console.WriteLine($"Found patient with file name: {worksheet.Cells[i, columns["filename"]]?.Value?.ToString() ?? ""}.");
 
                         var currentFileName = worksheet.Cells[i, columns["filename"]]?.Value?.ToString() ?? null;
                         var currentDataset = worksheet.Cells[i, columns["dataset"]]?.Value?.ToString() ?? null;
@@ -72,7 +76,7 @@ namespace WorldBT.ExcelDbInsert
                         var currentTsne2 = worksheet.Cells[i, columns["tsne2"]]?.Value?.ToString() ?? null;
 
                         // Create dataset if not found
-                        Console.WriteLine("Checking dataset...");
+                        // Console.WriteLine("Checking dataset...");
                         var datasetId = _context
                             .Datasets
                             .Where(x => x.Name == currentDataset)
@@ -94,17 +98,17 @@ namespace WorldBT.ExcelDbInsert
                             _context
                                 .SaveChanges();
 
-                            Console.WriteLine($"Dataset '{currentDataset}' created.");
+                            // Console.WriteLine($"Dataset '{currentDataset}' created.");
 
                             datasetId = newDataset.Id;
                         }
-                        else
-                        {
-                            Console.WriteLine($"Existing dataset '{currentDataset}' found.");
-                        }
+                        // else
+                        // {
+                        //     Console.WriteLine($"Existing dataset '{currentDataset}' found.");
+                        // }
 
                         // Create histology if not found
-                        Console.WriteLine("Checking histology...");
+                        // Console.WriteLine("Checking histology...");
                         var histologyId = _context
                             .Histologies
                             .Where(x => x.Name == currentHistology)
@@ -125,17 +129,17 @@ namespace WorldBT.ExcelDbInsert
                             _context
                                 .SaveChanges();
 
-                            Console.WriteLine($"Histology '{currentHistology}' created.");
+                            // Console.WriteLine($"Histology '{currentHistology}' created.");
 
                             histologyId = newHistology.Id;
                         }
-                        else
-                        {
-                            Console.WriteLine($"Existing histology '{currentHistology}' found.");
-                        }
+                        // else
+                        // {
+                        //     Console.WriteLine($"Existing histology '{currentHistology}' found.");
+                        // }
 
                         // Create subgroup if not found
-                        Console.WriteLine("Checking subgroup...");
+                        // Console.WriteLine("Checking subgroup...");
                         var subgroupId = _context
                             .Subgroups
                             .Where(x => x.Name == currentSubgroup)
@@ -156,17 +160,17 @@ namespace WorldBT.ExcelDbInsert
                             _context
                                 .SaveChanges();
 
-                            Console.WriteLine($"Subgroup '{currentSubgroup}' created.");
+                            // Console.WriteLine($"Subgroup '{currentSubgroup}' created.");
 
                             subgroupId = newSubgroup.Id;
                         }
-                        else
-                        {
-                            Console.WriteLine($"Existing subgroup '{currentSubgroup}' found.");
-                        }
+                        // else
+                        // {
+                        //     Console.WriteLine($"Existing subgroup '{currentSubgroup}' found.");
+                        // }
 
                         // Create location if not found
-                        Console.WriteLine("Checking location...");
+                        // Console.WriteLine("Checking location...");
                         var locationId = _context
                             .Locations
                             .Where(x => x.Name == currentLocation)
@@ -187,17 +191,17 @@ namespace WorldBT.ExcelDbInsert
                             _context
                                 .SaveChanges();
 
-                            Console.WriteLine($"Location '{currentLocation}' created.");
+                            // Console.WriteLine($"Location '{currentLocation}' created.");
 
                             locationId = newLocation.Id;
                         }
-                        else
-                        {
-                            Console.WriteLine($"Existing location '{currentLocation}' found.");
-                        }
+                        // else
+                        // {
+                        //     Console.WriteLine($"Existing location '{currentLocation}' found.");
+                        // }
 
                         // Create tissue type if not found
-                        Console.WriteLine("Checking tissue type...");
+                        // Console.WriteLine("Checking tissue type...");
                         var tissueTypeId = _context
                             .TissueTypes
                             .Where(x => x.Name == currentTissueType)
@@ -218,17 +222,17 @@ namespace WorldBT.ExcelDbInsert
                             _context
                                 .SaveChanges();
 
-                            Console.WriteLine($"Tissue type '{currentTissueType}' created.");
+                            // Console.WriteLine($"Tissue type '{currentTissueType}' created.");
 
                             tissueTypeId = newTissueType.Id;
                         }
-                        else
-                        {
-                            Console.WriteLine($"Existing tissue type '{currentTissueType}' found.");
-                        }
+                        // else
+                        // {
+                        //     Console.WriteLine($"Existing tissue type '{currentTissueType}' found.");
+                        // }
 
                         // Create patient
-                        Console.WriteLine("Creating new patient...");
+                        // Console.WriteLine("Creating new patient...");
                         var patient = new Patient
                         {
                             FileName = currentFileName,
@@ -246,10 +250,10 @@ namespace WorldBT.ExcelDbInsert
                         _context
                             .SaveChanges();
 
-                        Console.WriteLine($"Patient {patient.Id} created.");
+                        // Console.WriteLine($"Patient {patient.Id} created.");
 
                         // Create tsne coordinate
-                        Console.WriteLine("Creating new tsne coordinate...");
+                        // Console.WriteLine("Creating new tsne coordinate...");
                         var tsneCoordinate = new TsneCoordinate
                         {
                             PatientId = patient.Id,
@@ -264,10 +268,128 @@ namespace WorldBT.ExcelDbInsert
                         _context
                             .SaveChanges();
 
-                        Console.WriteLine($"Tsne coordinate {tsneCoordinate.Id} created.");
+                        // Console.WriteLine($"Tsne coordinate {tsneCoordinate.Id} created.");
                     }
                 }
             }
+
+            Console.WriteLine("Metadata file insert completed.");
+        }
+
+        private void InsertGenomics()
+        {
+            Console.WriteLine("Starting genomic file insert...");
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var file = new FileInfo("files/genomic.xlsx");
+
+            using (var package = new ExcelPackage(file))
+            {
+                var worksheet = package?
+                    .Workbook?
+                    .Worksheets?
+                    .FirstOrDefault();
+
+                var totalRows = worksheet?
+                    .Dimension?
+                    .Rows;
+
+                var totalColumns = worksheet?
+                    .Dimension?
+                    .Columns;
+
+                if (totalRows == null)
+                    return;
+
+                if (totalColumns == null || totalColumns <= 1)
+                {
+                    Console.WriteLine("No patient columns found in file.");
+                    return;
+                }
+
+                Console.WriteLine($"Found {totalRows} rows.");
+                Console.WriteLine($"Found {totalColumns - 1} patients.");
+
+                var headers = worksheet.GetHeaderColumns();
+                var columns = headers.ReadColumnNumbers();
+
+                for (int i = 2; i <= totalRows; i++)
+                {
+                    // Console.WriteLine($"Found patient with file name: {worksheet.Cells[i, columns["filename"]]?.Value?.ToString() ?? ""}.");
+
+                    var currentEntrezId = worksheet.Cells[i, columns["entrezgeneid"]]?.Value?.ToString() ?? null;
+
+                    // Create gene if not found
+                    // Console.WriteLine("Checking gene...");
+                    var geneId = _context
+                        .Genes
+                        .Where(x => x.EntrezId == Convert.ToInt32(currentEntrezId))
+                        .FirstOrDefault()?
+                        .Id;
+                        
+                    if (geneId == null)
+                    {
+                        var newGene = new Gene
+                        {
+                            EntrezId = Convert.ToInt32(currentEntrezId)
+                        };
+
+                        _context
+                            .Genes
+                            .Add(newGene);
+
+                        _context
+                            .SaveChanges();
+
+                        // Console.WriteLine($"Gene '{currentEntrezId}' created.");
+
+                        geneId = newGene.Id;
+                    }
+                    // else
+                    // {
+                    //     Console.WriteLine($"Existing gene '{currentEntrezId}' found.");
+                    // }
+
+                    // loop through each column (patient)
+                    for (int x = 2; x <= totalColumns; x++)
+                    {
+                        // find patient
+                        var fileName = worksheet.Cells[1, x]?.Value?.ToString()?.Trim()?.ToLower() ?? null;
+                        var patientId = _context
+                            .Patients
+                            .Where(pt => pt.FileName.Trim().ToLower() == fileName)
+                            .FirstOrDefault()?
+                            .Id;
+                        
+                        if (patientId == null)
+                            throw new Exception($"Patient with file name {fileName ?? "null"} could not be found.");
+
+                        // insert gene expression value
+                        var geneExpressionValueString = worksheet.Cells[i, x]?.Value?.ToString() ?? null;
+                        if (geneExpressionValueString == null)
+                            continue;
+
+                        var geneExpressionValue = Convert.ToDecimal(geneExpressionValueString);
+
+                        var newGeneExpression = new GeneExpression
+                        {
+                            GeneId = (Guid) geneId,
+                            PatientId = (Guid) patientId,
+                            ExpressionValue = geneExpressionValue
+                        };
+
+                        _context
+                            .GeneExpressions
+                            .Add(newGeneExpression);
+
+                        _context
+                            .SaveChanges();
+                    }
+                }
+            }
+
+            Console.WriteLine("Genomic file insert completed.");
         }
     }
 }
