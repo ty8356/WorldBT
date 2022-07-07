@@ -2,40 +2,56 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "api_build",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/ExcelDbInsert/ExcelDbInsert.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "${workspaceFolder}/Api/Api.csproj"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/ExcelDbInsert/ExcelDbInsert.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
+            "type": "npm",
+            "script": "start",
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "typescript",
+                "pattern": "$tsc",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": {
+                        "regexp": "(.*?)"
+                    },
+                    "endsPattern": {
+                        "regexp": "bundle generation complete"
+                    }
+                }
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/Web"
+            }
         },
         {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "--project",
-                "${workspaceFolder}/ExcelDbInsert/ExcelDbInsert.csproj"
-            ],
-            "problemMatcher": "$msCompile"
+            "type": "npm",
+            "script": "test",
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "typescript",
+                "pattern": "$tsc",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": {
+                        "regexp": "(.*?)"
+                    },
+                    "endsPattern": {
+                        "regexp": "bundle generation complete"
+                    }
+                }
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/Web"
+            }
         }
     ]
 }
