@@ -26,12 +26,248 @@ namespace WorldBT.ExcelDbInsert
         // NOTE: tons of hard coding because this is a one-time thing
         public void Execute()
         {
-            InsertInitial();
+            InsertMetaData();
         }
 
-        private void InsertInitial()
+        private void InsertMetaData()
         {
-            Console.WriteLine("it works!");
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var file = new FileInfo("files/MetaData.xlsx");
+
+            using (var package = new ExcelPackage(file))
+            {
+                var worksheet = package?
+                    .Workbook?
+                    .Worksheets?
+                    .FirstOrDefault();
+
+                var totalRows = worksheet?
+                    .Dimension?
+                    .Rows;
+
+                if (totalRows == null)
+                {
+                    Console.WriteLine("No rows found.");
+                }
+                else
+                {
+                    Console.WriteLine($"Found {totalRows} rows.");
+
+                    var headers = worksheet.GetHeaderColumns();
+                    var columns = headers.ReadColumnNumbers();
+
+                    for (int i = 2; i <= totalRows; i++)
+                    {
+                        Console.WriteLine($"Found patient with file name: {worksheet.Cells[i, columns["filename"]]?.Value?.ToString() ?? ""}.");
+
+                        var currentFileName = worksheet.Cells[i, columns["filename"]]?.Value?.ToString() ?? null;
+                        var currentDataset = worksheet.Cells[i, columns["dataset"]]?.Value?.ToString() ?? null;
+                        var currentHistology = worksheet.Cells[i, columns["histology"]]?.Value?.ToString() ?? null;
+                        var currentSubgroup = worksheet.Cells[i, columns["subgroup"]]?.Value?.ToString() ?? null;
+                        var currentLocation = worksheet.Cells[i, columns["location"]]?.Value?.ToString() ?? null;
+                        var currentTissueType = worksheet.Cells[i, columns["tissuetype"]]?.Value?.ToString() ?? null;
+                        var currentCenter = worksheet.Cells[i, columns["center"]]?.Value?.ToString() ?? null;
+                        var currentTsne1 = worksheet.Cells[i, columns["tsne1"]]?.Value?.ToString() ?? null;
+                        var currentTsne2 = worksheet.Cells[i, columns["tsne2"]]?.Value?.ToString() ?? null;
+
+                        // Create dataset if not found
+                        Console.WriteLine("Checking dataset...");
+                        var datasetId = _context
+                            .Datasets
+                            .Where(x => x.Name == currentDataset)
+                            .FirstOrDefault()?
+                            .Id;
+                            
+                        if (datasetId == null)
+                        {
+                            var newDataset = new Dataset
+                            {
+                                Name = currentDataset,
+                                Center = currentCenter
+                            };
+
+                            _context
+                                .Datasets
+                                .Add(newDataset);
+
+                            _context
+                                .SaveChanges();
+
+                            Console.WriteLine($"Dataset '{currentDataset}' created.");
+
+                            datasetId = newDataset.Id;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Existing dataset '{currentDataset}' found.");
+                        }
+
+                        // Create histology if not found
+                        Console.WriteLine("Checking histology...");
+                        var histologyId = _context
+                            .Histologies
+                            .Where(x => x.Name == currentHistology)
+                            .FirstOrDefault()?
+                            .Id;
+                            
+                        if (histologyId == null)
+                        {
+                            var newHistology = new Histology
+                            {
+                                Name = currentHistology
+                            };
+
+                            _context
+                                .Histologies
+                                .Add(newHistology);
+
+                            _context
+                                .SaveChanges();
+
+                            Console.WriteLine($"Histology '{currentHistology}' created.");
+
+                            histologyId = newHistology.Id;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Existing histology '{currentHistology}' found.");
+                        }
+
+                        // Create subgroup if not found
+                        Console.WriteLine("Checking subgroup...");
+                        var subgroupId = _context
+                            .Subgroups
+                            .Where(x => x.Name == currentSubgroup)
+                            .FirstOrDefault()?
+                            .Id;
+                            
+                        if (subgroupId == null)
+                        {
+                            var newSubgroup = new Subgroup
+                            {
+                                Name = currentSubgroup
+                            };
+
+                            _context
+                                .Subgroups
+                                .Add(newSubgroup);
+
+                            _context
+                                .SaveChanges();
+
+                            Console.WriteLine($"Subgroup '{currentSubgroup}' created.");
+
+                            subgroupId = newSubgroup.Id;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Existing subgroup '{currentSubgroup}' found.");
+                        }
+
+                        // Create location if not found
+                        Console.WriteLine("Checking location...");
+                        var locationId = _context
+                            .Locations
+                            .Where(x => x.Name == currentLocation)
+                            .FirstOrDefault()?
+                            .Id;
+                            
+                        if (locationId == null)
+                        {
+                            var newLocation = new Location
+                            {
+                                Name = currentLocation
+                            };
+
+                            _context
+                                .Locations
+                                .Add(newLocation);
+
+                            _context
+                                .SaveChanges();
+
+                            Console.WriteLine($"Location '{currentLocation}' created.");
+
+                            locationId = newLocation.Id;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Existing location '{currentLocation}' found.");
+                        }
+
+                        // Create tissue type if not found
+                        Console.WriteLine("Checking tissue type...");
+                        var tissueTypeId = _context
+                            .TissueTypes
+                            .Where(x => x.Name == currentTissueType)
+                            .FirstOrDefault()?
+                            .Id;
+                            
+                        if (tissueTypeId == null)
+                        {
+                            var newTissueType = new TissueType
+                            {
+                                Name = currentTissueType
+                            };
+
+                            _context
+                                .TissueTypes
+                                .Add(newTissueType);
+
+                            _context
+                                .SaveChanges();
+
+                            Console.WriteLine($"Tissue type '{currentTissueType}' created.");
+
+                            tissueTypeId = newTissueType.Id;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Existing tissue type '{currentTissueType}' found.");
+                        }
+
+                        // Create patient
+                        Console.WriteLine("Creating new patient...");
+                        var patient = new Patient
+                        {
+                            FileName = currentFileName,
+                            DatasetId = (Guid) datasetId,
+                            HistologyId = (int) histologyId,
+                            SubgroupId = (int) subgroupId,
+                            LocationId = (int) locationId,
+                            TissueTypeId = (int) tissueTypeId
+                        };
+
+                        _context
+                            .Patients
+                            .Add(patient);
+
+                        _context
+                            .SaveChanges();
+
+                        Console.WriteLine($"Patient {patient.Id} created.");
+
+                        // Create tsne coordinate
+                        Console.WriteLine("Creating new tsne coordinate...");
+                        var tsneCoordinate = new TsneCoordinate
+                        {
+                            PatientId = patient.Id,
+                            X = Convert.ToDecimal(currentTsne1),
+                            Y = Convert.ToDecimal(currentTsne2)
+                        };
+
+                        _context
+                            .TsneCoordinates
+                            .Add(tsneCoordinate);
+    
+                        _context
+                            .SaveChanges();
+
+                        Console.WriteLine($"Tsne coordinate {tsneCoordinate.Id} created.");
+                    }
+                }
+            }
         }
     }
 }

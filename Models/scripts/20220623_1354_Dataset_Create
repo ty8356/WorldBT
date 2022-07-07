@@ -1,0 +1,5 @@
+CREATE TABLE [Dataset] (
+    [Id] uniqueidentifier NOT NULL CONSTRAINT PK_Dataset_Id PRIMARY KEY DEFAULT NEWID()
+    ,[Name] nvarchar(80) NOT NULL
+    ,[Center] nvarchar(200) NOT NULL
+)

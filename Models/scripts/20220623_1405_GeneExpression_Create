@@ -1,0 +1,6 @@
+CREATE TABLE [GeneExpression] (
+    [Id] uniqueidentifier NOT NULL CONSTRAINT PK_GeneExpression_Id PRIMARY KEY DEFAULT NEWID()
+    ,[GeneId] uniqueidentifier NOT NULL CONSTRAINT FK_GeneExpression_Gene_GeneId FOREIGN KEY REFERENCES [Gene](Id)
+    ,[PatientId] uniqueidentifier NOT NULL CONSTRAINT FK_GeneExpression_Patient_PatientId FOREIGN KEY REFERENCES [Patient](Id)
+    ,[ExpressionValue] decimal(12,9) NOT NULL 
+)
