@@ -57,6 +57,7 @@ namespace WorldBT.Api
             services.AddScoped(provider => new WorldBT.Models.Mapper.MapperConfiguration().ConfigureAutoMapper(provider));
 
             services.AddTransient<IGeneService, GeneService>();
+            services.AddTransient<ITsneCoordinateService, TsneCoordinateService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
