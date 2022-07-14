@@ -1,0 +1,36 @@
+/* basic positioning */
+.legend { 
+    list-style: none; 
+}
+
+.legend li { 
+    float: left; 
+    margin-right: 10px; 
+}
+
+.legend span { 
+    border: 1px solid #ccc; 
+    float: left; 
+    width: 12px; 
+    height: 12px; 
+    margin: 2px; 
+}
+
+/* your colors */
+.legend .significant { 
+    background-color: #AD0000; 
+    border-radius: 4px; 
+}
+
+.legend .insignificant { 
+    background-color: #A9A9A9;
+    border-radius: 4px; 
+}
+
+.slider-input {
+    width: 100px !important;
+}
+
+.search-selection-dropdown {
+    width: 300px;
+}
