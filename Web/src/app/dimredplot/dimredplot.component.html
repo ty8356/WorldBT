@@ -1,24 +1,17 @@
 <div class="dimredplot-content">
   
   <div class="one-line-header">
-    <h1 class="title">Results</h1>
+    <h1 class="title">Brain Tumor Map</h1>
   
     <!-- <mat-slide-toggle color="primary" [(ngModel)]="showReadCounts"></mat-slide-toggle> -->
   </div>
 
-  <ngx-charts-bubble-chart
-    [view]="view"
-    [results]="bubbleData"
-    [xAxis]="showXAxis"
-    [yAxis]="showYAxis"
-    [legend]="showLegend"
-    [showXAxisLabel]="showXAxisLabel"
-    [showYAxisLabel]="showYAxisLabel"
-    [xAxisLabel]="xAxisLabel"
-    [yAxisLabel]="yAxisLabel"
-    [minRadius]="minRadius"
-    [maxRadius]="maxRadius">
-  </ngx-charts-bubble-chart>
+  <google-chart
+    [type]="chartType"
+    [data]="chartData"
+    [options]="chartOptions"
+    [style]="chartStyle">
+  </google-chart>
 
   <!-- <ngx-charts-bubble-chart
     [view]="view"
