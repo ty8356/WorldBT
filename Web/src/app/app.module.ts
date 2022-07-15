@@ -19,6 +19,7 @@ import { MatMenuModule} from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { NgxSpinner, NgxSpinnerModule } from "ngx-spinner"; 
+import { GoogleChartsModule } from 'angular-google-charts';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { NgxSpinner, NgxSpinnerModule } from "ngx-spinner";
     RouterModule.forRoot([
       {path: '', component: DimRedPlotComponent}
     ]),
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    GoogleChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent],
