@@ -2,8 +2,6 @@
   
   <div class="one-line-header">
     <h1 class="title">Brain Tumor Map</h1>
-  
-    <!-- <mat-slide-toggle color="primary" [(ngModel)]="showReadCounts"></mat-slide-toggle> -->
   </div>
 
   <google-chart
@@ -13,164 +11,28 @@
     [style]="chartStyle">
   </google-chart>
 
-  <!-- <ngx-charts-bubble-chart
-    [view]="view"
-    [scheme]="colorScheme"
-    [results]="bubbleData"
-    [xAxis]="showXAxis"
-    [yAxis]="showYAxis"
-    [legend]="showLegend"
-    [showXAxisLabel]="showXAxisLabel"
-    [showYAxisLabel]="showYAxisLabel"
-    [xAxisLabel]="xAxisLabel"
-    [yAxisLabel]="yAxisLabel"
-    [xScaleMin]="xScaleMin"
-    [xScaleMax]="xScaleMax"
-    [yScaleMin]="yScaleMin"
-    [yScaleMax]="yScaleMax"
-    [minRadius]="minRadius"
-    [maxRadius]="maxRadius"
-    (select)="onSelect($event)"
-    (activate)="onActivate($event)"
-    (deactivate)="onDeactivate($event)">
-  </ngx-charts-bubble-chart> -->
-  
-  <!-- <mat-tab-group (selectedTabChange)="toggleSigLegend($event)" class="tab-group">
-    <mat-tab label="All">
-      <ng-template matTabContent>
-        <ngx-charts-line-chart
-          [animations]=false
-          [view]="view"
-          [scheme]="'flame'"
-          [legend]="lineLegend"
-          [legendPosition]="legendPosition"
-          [showXAxisLabel]="showXAxisLabel"
-          [showYAxisLabel]="showYAxisLabel"
-          [xAxis]="showXAxis"
-          [yAxis]="showYAxis"
-          [xAxisLabel]="xAxisLabel"
-          [yAxisLabel]="yAxisLabel"
-          [xAxisTicks]="xAxisTicks"
-          [timeline]="timeline"
-          [results]="allData"
-          >
-          <ng-template #tooltipTemplate let-model="model">
-            {{model.value}}
-            <br>
-            q = {{model.extra.qvalue}}
-          </ng-template>
-        </ngx-charts-line-chart>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="Total mRNA">
-      <ng-template matTabContent>
-        <ngx-charts-bar-vertical
-          [animations]=false
-          [view]="view"
-          [scheme]="'flame'"
-          [results]="inData"
-          [gradient]="gradient"
-          [xAxis]="showXAxis"
-          [yAxis]="showYAxis"
-          [legend]="barLegend"
-          [legendPosition]="legendPosition"
-          [showXAxisLabel]="showXAxisLabel"
-          [showYAxisLabel]="showYAxisLabel"
-          [xAxisLabel]="xAxisLabel"
-          [yAxisLabel]="yAxisLabel"
-          [customColors]="inColors"
-          >
-          <ng-template #tooltipTemplate let-model="model">
-            {{model.value}}
-            <br>
-            q = {{model.extra.qvalue}}
-            <br>
-            Median Reads: {{model.extra.medianReadCount}}
-          </ng-template>
-        </ngx-charts-bar-vertical>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="OL mRNA">
-      <ng-template matTabContent>
-        <ngx-charts-bar-vertical
-          [animations]=false
-          [view]="view"
-          [scheme]="'flame'"
-          [results]="ipData"
-          [gradient]="gradient"
-          [xAxis]="showXAxis"
-          [yAxis]="showYAxis"
-          [legend]="barLegend"
-          [legendPosition]="legendPosition"
-          [showXAxisLabel]="showXAxisLabel"
-          [showYAxisLabel]="showYAxisLabel"
-          [xAxisLabel]="xAxisLabel"
-          [yAxisLabel]="yAxisLabel"
-          [customColors]="ipColors"
-          >
-          <ng-template #tooltipTemplate let-model="model">
-            {{model.value}}
-            <br>
-            q = {{model.extra.qvalue}}
-            <br>
-            Median Reads: {{model.extra.medianReadCount}}
-          </ng-template>
-        </ngx-charts-bar-vertical>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="OL Enrichment">
-      <ng-template matTabContent>
-        <ngx-charts-bar-vertical
-          [animations]=false
-          [view]="view"
-          [scheme]="'flame'"
-          [results]="enrichmentData"
-          [gradient]="gradient"
-          [xAxis]="showXAxis"
-          [yAxis]="showYAxis"
-          [legend]="barLegend"
-          [legendPosition]="legendPosition"
-          [showXAxisLabel]="showXAxisLabel"
-          [showYAxisLabel]="showYAxisLabel"
-          [xAxisLabel]="xAxisLabel"
-          [yAxisLabel]="yAxisLabel"
-          [customColors]="enrichmentColors"
-          >
-          <ng-template #tooltipTemplate let-model="model">
-            {{model.value}}
-            <br>
-            q = {{model.extra.qvalue}}
-          </ng-template>
-        </ngx-charts-bar-vertical>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="&Delta; in OL Enrichment">
-      <ng-template matTabContent>
-        <ngx-charts-bar-vertical
-          [animations]=false
-          [view]="view"
-          [scheme]="'flame'"
-          [results]="interactionData"
-          [gradient]="gradient"
-          [xAxis]="showXAxis"
-          [yAxis]="showYAxis"
-          [legend]="barLegend"
-          [legendPosition]="legendPosition"
-          [showXAxisLabel]="showXAxisLabel"
-          [showYAxisLabel]="showYAxisLabel"
-          [xAxisLabel]="xAxisLabel"
-          [yAxisLabel]="yAxisLabel"
-          [customColors]="interactionColors"
-          >
-          <ng-template #tooltipTemplate let-model="model">
-            {{model.value}}
-            <br>
-            q = {{model.extra.qvalue}}
-          </ng-template>
-        </ngx-charts-bar-vertical>
-      </ng-template>
-    </mat-tab>
-  </mat-tab-group> -->
+  <!-- <mat-drawer-container>
+    <mat-drawer mode="side" opened>
+      
+      <mat-selection-list #histologies>
+        <mat-list-option *ngFor="let histology of histologyList">
+          {{histology}}
+        </mat-list-option>
+      </mat-selection-list>
+
+    </mat-drawer>
+
+    <mat-drawer-content>
+
+      <google-chart
+        [type]="chartType"
+        [data]="chartData"
+        [options]="chartOptions"
+        [style]="chartStyle">
+      </google-chart>
+
+    </mat-drawer-content>
+  </mat-drawer-container> -->
   
 </div>
 

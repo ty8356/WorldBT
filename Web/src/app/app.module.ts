@@ -1,9 +1,11 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, Component } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AppComponent } from './app.component';
 import { DimRedPlotComponent } from './dimredplot/dimredplot.component';
@@ -20,7 +22,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { NgxSpinner, NgxSpinnerModule } from "ngx-spinner"; 
 import { GoogleChartsModule } from 'angular-google-charts';
-
+import { MatSidenavModule } from '@angular/material/sidenav'
+import {MatNativeDateModule} from '@angular/material/core';
+import { MatSlider, MatSliderModule } from '@angular/material/slider';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,6 +36,8 @@ import { GoogleChartsModule } from 'angular-google-charts';
     FormsModule,
     MatButtonModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
     HttpClientModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
@@ -42,11 +48,14 @@ import { GoogleChartsModule } from 'angular-google-charts';
     NgxSliderModule,
     MatMenuModule,
     MatSelectModule,
+    NgxSpinnerModule,
+    GoogleChartsModule,
+    MatSidenavModule,
+    MatNativeDateModule,
+    MatSliderModule,
     RouterModule.forRoot([
       {path: '', component: DimRedPlotComponent}
-    ]),
-    NgxSpinnerModule,
-    GoogleChartsModule
+    ])
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -58,6 +58,7 @@ namespace WorldBT.Api
 
             services.AddTransient<IGeneService, GeneService>();
             services.AddTransient<ITsneCoordinateService, TsneCoordinateService>();
+            services.AddTransient<IHistologyService, HistologyService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
