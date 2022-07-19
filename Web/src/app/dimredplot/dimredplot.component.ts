@@ -20,14 +20,12 @@ import { MatSidenav } from '@angular/material/sidenav';
 export class DimRedPlotComponent implements OnInit {
 
   innerWidth: number = window.innerWidth;
-
   view: [number, number] = [this.innerWidth <= 800 ? this.innerWidth - 60 : 1200, 700];
 
   // google chart settings
   chartData: any[] = [];
   chartType = ChartType.ScatterChart;
   chartOptions = {
-    legend: 'none',
     width: 1200,
     height: 700,
     title: '',
@@ -43,12 +41,16 @@ export class DimRedPlotComponent implements OnInit {
       left: 50,
       width: '90%',
       height: '90%'
-    }
+    },
+    tooltip: { isHtml: true }
   };
   chartStyle: string = "width: 100%;";
 
+
   histologyList: string[] = [];
   selectedHistologies: string[] = [];
+
+  allTsneCoordinates: TsneCoordinate[] = [];
 
   constructor(
     public spinnerService: NgxSpinnerService, 
@@ -64,6 +66,7 @@ export class DimRedPlotComponent implements OnInit {
     this.tsneCoordinateService.fetchAll()
       .subscribe(tsneCoordinates => {
 
+        this.allTsneCoordinates = tsneCoordinates;
         this.chartData = [];
 
         tsneCoordinates.forEach(coord => {
@@ -91,6 +94,42 @@ export class DimRedPlotComponent implements OnInit {
     this.innerWidth = window.innerWidth;
     this.view = [this.innerWidth <= 800 ? this.innerWidth - 60 : 800, 300]
     console.log(this.view);
+  }
+
+  onMouseOver($event: any) {
+    
+    if ($event.column != null && $event.row != null) {
+      console.log($event);
+
+      var hoveredCoord = this.allTsneCoordinates[$event.row];
+      console.log(hoveredCoord);
+
+      // this is not the angular way, but I grew tired of scouring
+      // through bad documentation to customize the tooltips
+      let tooltipItemList = document.getElementsByClassName('google-visualization-tooltip-item-list')[0];
+
+      // histology
+      var histologyLi = document.createElement("li");
+      histologyLi.setAttribute("class", "google-visualization-tooltip-item");
+
+      var histologySpan = document.createElement("span");
+      histologySpan.setAttribute("style", "font-family:Arial;font-size:16px;color:#000000;opacity:1;margin:0;font-style:none;text-decoration:none;font-weight:none;");
+      histologySpan.innerText = 'Histology: ' + hoveredCoord.Patient.Histology.Name;
+
+      histologyLi.appendChild(histologySpan);
+      tooltipItemList.appendChild(histologyLi);
+
+      // location
+      var locationLi = document.createElement("li");
+      locationLi.setAttribute("class", "google-visualization-tooltip-item");
+
+      var locationSpan = document.createElement("span");
+      locationSpan.setAttribute("style", "font-family:Arial;font-size:16px;color:#000000;opacity:1;margin:0;font-style:none;text-decoration:none;font-weight:none;");
+      locationSpan.innerText = 'Location: ' + hoveredCoord.Patient.Location.Name;
+
+      locationLi.appendChild(locationSpan);
+      tooltipItemList.appendChild(locationLi);
+    }
   }
 
 }
