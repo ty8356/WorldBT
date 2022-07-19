@@ -11,28 +11,25 @@ using OfficeOpenXml.Style;
 
 namespace WorldBT.Services
 {
-    public class TsneCoordinateService : ITsneCoordinateService
+    public class HistologyService : IHistologyService
     {
         private readonly WorldBtDbContext _context;
 
-        public TsneCoordinateService(
+        public HistologyService(
             WorldBtDbContext context
         )
         {
             _context = context;
         }
 
-        public IQueryable<TsneCoordinate> FetchAll()
+        public IQueryable<Histology> FetchAll()
         {
-            var tsneCoordinates = _context
-                .TsneCoordinates
-                .Include(x => x.Patient.Histology)
-                .Include(x => x.Patient.Location)
-                .Include(x => x.Patient.Subgroup)
-                .Include(x => x.Patient.TissueType)
+            var histologies = _context
+                .Histologies
+                .OrderBy(x => x.Name)
                 .AsQueryable();
 
-            return tsneCoordinates;
+            return histologies;
         }
     }
 }

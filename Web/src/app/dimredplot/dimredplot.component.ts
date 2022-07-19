@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, HostListener } from '@angular/core';
+import { Component, OnInit, TemplateRef, HostListener, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -10,7 +10,8 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { TsneCoordinatesService } from '../services/tsnecoordinates.service';
 import { TsneCoordinate } from '../models/tsneCoordinate';
 import { ChartType } from 'angular-google-charts';
-
+import { HistologiesService } from '../services/histologies.service';
+import { MatSidenav } from '@angular/material/sidenav';
 @Component({
   selector: 'app-dimredplot',
   templateUrl: './dimredplot.component.html',
@@ -46,8 +47,13 @@ export class DimRedPlotComponent implements OnInit {
   };
   chartStyle: string = "width: 100%;";
 
-  constructor(public spinnerService: NgxSpinnerService, public tsneCoordinateService: TsneCoordinatesService) {
+  histologyList: string[] = [];
+  selectedHistologies: string[] = [];
 
+  constructor(
+    public spinnerService: NgxSpinnerService, 
+    public tsneCoordinateService: TsneCoordinatesService,
+    public histologieService: HistologiesService) {
 
   }
 
@@ -64,7 +70,18 @@ export class DimRedPlotComponent implements OnInit {
           this.chartData.push([ coord.X, coord.Y ]);
         });
 
+        console.log(tsneCoordinates);
+
         this.spinnerService.hide();
+
+      });
+
+    this.histologieService.fetchAll()
+      .subscribe(histologies => {
+
+        histologies.forEach(hist => {
+          this.histologyList.push(hist.Name);
+        });
 
       });
   }
