@@ -34,5 +34,33 @@ namespace WorldBT.Services
 
             return tsneCoordinates;
         }
+
+        public Dictionary<string, List<TsneCoordinate>> FetchAllGrouped()
+        {
+            var tsneCoordinates = _context
+                .TsneCoordinates
+                .Include(x => x.Patient.Histology)
+                .Include(x => x.Patient.Location)
+                .OrderBy(x => x.Patient.Histology.Name)
+                .ToList();
+
+            var histologies = tsneCoordinates
+                .Select(x => x.Patient.Histology.Name)
+                .Distinct()
+                .ToList();
+
+            var grouped = new Dictionary<string, List<TsneCoordinate>>();
+
+            foreach (var histology in histologies)
+            {
+                var tempCoords = tsneCoordinates
+                    .Where(x => x.Patient.Histology.Name == histology)
+                    .ToList();
+                
+                grouped.Add(histology, tempCoords);
+            }
+
+            return grouped;
+        }
     }
 }

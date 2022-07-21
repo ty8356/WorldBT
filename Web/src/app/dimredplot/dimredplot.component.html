@@ -1,40 +1,17 @@
 <div class="dimredplot-content">
   
   <div class="one-line-header">
-    <h1 class="title">Brain Tumor Map</h1>
+    <h2 class="title">Brain Tumor Map</h2>
   </div>
 
-  <google-chart
-    [type]="chartType"
-    [data]="chartData"
-    [options]="chartOptions"
-    [style]="chartStyle"
-    (mouseover)="onMouseOver($event)"
-    >
-  </google-chart>
-
-  <!-- <mat-drawer-container>
-    <mat-drawer mode="side" opened>
-      
-      <mat-selection-list #histologies>
-        <mat-list-option *ngFor="let histology of histologyList">
-          {{histology}}
-        </mat-list-option>
-      </mat-selection-list>
-
-    </mat-drawer>
-
-    <mat-drawer-content>
-
-      <google-chart
-        [type]="chartType"
-        [data]="chartData"
-        [options]="chartOptions"
-        [style]="chartStyle">
-      </google-chart>
-
-    </mat-drawer-content>
-  </mat-drawer-container> -->
+  <div class="chart-container">
+    <canvas baseChart
+      [data]="scatterChartData"
+      [options]="scatterChartOptions"
+      [type]="scatterChartType"
+      >
+    </canvas>
+  </div>
   
 </div>
 

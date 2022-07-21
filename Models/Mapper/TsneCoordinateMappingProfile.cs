@@ -1,6 +1,9 @@
 using AutoMapper;
 using WorldBT.Models.Model;
 using WorldBT.Models.ResponseModel;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace WorldBT.Models.Mapper
 {

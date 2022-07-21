@@ -32,7 +32,9 @@
               "node_modules/ngx-spinner/animations/ball-spin-clockwise.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/color/index.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -105,5 +107,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

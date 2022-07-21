@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace WorldBT.Api.Controllers
 {
@@ -38,6 +39,26 @@ namespace WorldBT.Api.Controllers
                 .FetchAll();
             
             return Ok(_mapper.Map<List<TsneCoordinateResponseModel>>(tsneCoordinates));
+        }
+
+        [HttpGet("grouped")]
+        public async Task<IActionResult> GetAllGrouped()
+        {
+            var groups = _tsneCoordinateService
+                .FetchAllGrouped();
+
+            var json = new List<TsneCoordinateByHistologyResponseModel>();
+
+            foreach (var group in groups)
+            {
+                json.Add(new TsneCoordinateByHistologyResponseModel
+                {
+                    Histology = group.Key,
+                    TsneCoordinates = _mapper.Map<List<TsneCoordinateResponseModel>>(group.Value)
+                });
+            }
+
+            return Ok(JsonSerializer.Serialize(json));
         }
     }
 }
