@@ -163,7 +163,8 @@ html, body { height: 100%; }
 
 .chart-container {
   display: block;
-  width: 1500px;
+  /* width: 1500px; */
+  width: 100%;
 }
 
 .toolbar {

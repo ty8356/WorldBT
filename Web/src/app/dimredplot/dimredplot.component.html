@@ -4,7 +4,7 @@
     <h2 class="title">Brain Tumor Map</h2>
   </div>
 
-  <div class="chart-container">
+  <div class="chart-container" [style.width.px]="chartWidth">
     <canvas baseChart
       [data]="scatterChartData"
       [options]="scatterChartOptions"
