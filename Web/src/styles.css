@@ -7,14 +7,6 @@
     text-align: center !important;
 }
 
-.gene-info {
-  max-width: 850px;
-}
-
-.description {
-  font-size: medium !important;
-}
-
 body{
     font-family: "Helvetica Neue", sans-serif;
 }
@@ -36,29 +28,11 @@ p {
   flex: 1;
 }
 
-.toolbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  background-color: #5c6a77;
-  color: white;
-  font-weight: 600;
-  z-index: 9999;
-}
-
-.toolbar img {
-  margin: 0 16px;
-}
-
 .content {
   display: flex;
-  margin: 82px auto 32px;
-  padding: 0 16px;
-  max-width: 960px;
+  margin: 0 auto 0;
+  padding: 65px 16px;
+  /* max-width: 960px; */
   flex-direction: column;
   align-items: center;
 }
@@ -81,33 +55,6 @@ a:hover {
 
 a:hover {
   color: #125699;
-}
-
-footer {
-  margin-top: 8px;
-  /* display: flex; */
-  align-items: center;
-  line-height: 20px;
-  position: fixed;
-  z-index: 9999;
-  bottom: 0px; /* was 5 */
-  width: 100%;
-  text-align: center !important;
-  background-color: #5c6a77;
-  color: lightgray;
-}
-
-footer a {
-  display: flex;
-  align-items: center;
-}
-
-svg#clouds {
-  position: fixed;
-  bottom: -160px;
-  left: -230px;
-  z-index: -10;
-  width: 1920px;
 }
 
 /* Responsive Styles */
@@ -176,16 +123,6 @@ svg#clouds {
   }
 }
 
-.mat-form-field {
-  width: 100% !important;
-}
-
-/* Make lines in line chart thick, with rounded ends */
-g.line-chart > g:last-of-type > g:nth-child(n) g.line-series > path {
-  stroke-width: 5;
-  stroke-linecap: round;
-}
-
 .ngx-slider-limit {
   visibility: hidden !important;
 }
@@ -222,41 +159,60 @@ g.line-chart > g:last-of-type > g:nth-child(n) g.line-series > path {
   align-items: center;
 }
 
-.home-center {
-  padding-right: 15px;
-  padding-left: 15px;
-}
-
-.content {
-  max-width: 1480px !important;
-}
-
-.right-content {
-  position: absolute;
-  right: 20%;
-}
-
-.description {
-  font-size: larger;
-}
-
-.footnote {
-  font-size: medium;
-}
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-
-.google-visualization-tooltip {
-  width: auto !important;
-  height: auto !important;
-  pointer-events: none;
-  /* position: relative !important; 
-  top: 0 !important;
-  right: 0 !important;   */
-  z-index: +1 !important;
+.chart-container {
+  display: block;
+  width: 1500px;
 }
 
-.google-visualization-tooltip-item {
-  margin: 0 !important;
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  /* background-color: #5c6a77; */
+  /* color: white; */
+  background-color: #191919;
+  color: lightgrey;
+  font-weight: 600;
+  z-index: 9999;
+}
+
+.toolbar img {
+  margin: 0 16px;
+}
+
+footer {
+  margin-top: 8px;
+  /* display: flex; */
+  align-items: center;
+  line-height: 20px;
+  position: fixed;
+  z-index: 9999;
+  bottom: 0px; /* was 5 */
+  width: 100%;
+  text-align: center !important;
+  background-color: #191919;
+  /* background-color: #5c6a77; */
+  color: lightgray;
+}
+
+footer a {
+  display: flex;
+  align-items: center;
+}
+
+body {
+  /* background-color: #35363A; */
+  background-color: #282828;
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.title {
+  color: lightgrey;
 }

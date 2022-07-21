@@ -9,5 +9,6 @@ namespace WorldBT.Interfaces.Services
     public interface ITsneCoordinateService
     {
         IQueryable<TsneCoordinate> FetchAll();
+        Dictionary<string, List<TsneCoordinate>> FetchAllGrouped();
     }
 }

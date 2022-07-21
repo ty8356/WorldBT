@@ -10,21 +10,18 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AppComponent } from './app.component';
 import { DimRedPlotComponent } from './dimredplot/dimredplot.component';
 import { HttpClientModule } from '@angular/common/http';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { ScaleLinear, ScaleBand, ScalePoint, ScaleTime } from 'd3-scale';
-import { BaseType } from 'd3-selection';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { MatMenuModule} from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
-import { NgxSpinner, NgxSpinnerModule } from "ngx-spinner"; 
-import { GoogleChartsModule } from 'angular-google-charts';
+import { NgxSpinnerModule } from "ngx-spinner"; 
 import { MatSidenavModule } from '@angular/material/sidenav'
-import {MatNativeDateModule} from '@angular/material/core';
-import { MatSlider, MatSliderModule } from '@angular/material/slider';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSliderModule } from '@angular/material/slider';
+import { NgChartsModule } from 'ng2-charts';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,18 +38,16 @@ import { MatSlider, MatSliderModule } from '@angular/material/slider';
     HttpClientModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    NgxChartsModule,
     MatTabsModule,
     MatSlideToggleModule,
     MatExpansionModule,
-    NgxSliderModule,
     MatMenuModule,
     MatSelectModule,
     NgxSpinnerModule,
-    GoogleChartsModule,
     MatSidenavModule,
     MatNativeDateModule,
     MatSliderModule,
+    NgChartsModule,
     RouterModule.forRoot([
       {path: '', component: DimRedPlotComponent}
     ])

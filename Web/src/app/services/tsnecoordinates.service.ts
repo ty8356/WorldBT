@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs';
 import { TsneCoordinate } from '../models/tsneCoordinate';
+import { TsneCoordinateByHistology } from '../models/tsneCoordinateByHistology';
 
 @Injectable({
 providedIn: 'any'
@@ -23,6 +24,14 @@ export class TsneCoordinatesService {
         let url = this.baseUrl;
 
         return this.http.get<TsneCoordinate[]>(url);
+
+    }
+
+    fetchAllGrouped(): Observable<TsneCoordinateByHistology[]> {
+
+        let url = this.baseUrl + '/grouped';
+
+        return this.http.get<TsneCoordinateByHistology[]>(url);
 
     }
 }
