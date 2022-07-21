@@ -14,7 +14,7 @@ export class HistologiesService {
     constructor(
         private http: HttpClient
     ) {
-        // this.baseUrl = `api/tsne-coordinates`;
+        // this.baseUrl = `api/histologies`;
         this.baseUrl = `http://localhost:5000/histologies`;
     }
 

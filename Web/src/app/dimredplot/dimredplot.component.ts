@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, HostListener, ViewChild, ViewChildren, QueryList, ElementRef, Renderer2 } from '@angular/core';
 import { NgxSpinnerService } from "ngx-spinner";
 import { TsneCoordinatesService } from '../services/tsnecoordinates.service';
 import { TsneCoordinate } from '../models/tsneCoordinate';
@@ -21,12 +21,12 @@ export class DimRedPlotComponent implements OnInit {
 
   innerWidth: number = window.innerWidth;
   view: [number, number] = [this.innerWidth <= 800 ? this.innerWidth - 60 : 1200, 700];
+  chartWidth: number;
 
   // chart settings
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
   scatterChartType: ChartType = 'scatter';
   scatterTooltipFooter = (tooltipItems: any[]) => {
-    
     if (tooltipItems.length > 1) {
 
       var histString = 'Histology: ';
@@ -52,7 +52,6 @@ export class DimRedPlotComponent implements OnInit {
     else {
       return 'Histology: ' + tooltipItems[0].dataset.label;
     }
-
   };
   scatterChartOptions: ChartConfiguration['options'] = {
     responsive: true,
@@ -174,6 +173,7 @@ export class DimRedPlotComponent implements OnInit {
   ngOnInit(): void {
     this.spinnerService.show();
     this.innerWidth = window.innerWidth;
+    this.chartWidth = this.innerWidth * 0.85;
 
     var rainbowColors = this.colorHelperService.RainbowCreate(60);
 
@@ -215,7 +215,7 @@ export class DimRedPlotComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = window.innerWidth;
-    this.view = [this.innerWidth <= 800 ? this.innerWidth - 60 : 800, 300]
+    this.chartWidth = this.innerWidth * 0.85;
   }
 
 }
