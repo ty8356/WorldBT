@@ -22,6 +22,7 @@ export class DimRedPlotComponent implements OnInit {
   innerWidth: number = window.innerWidth;
   view: [number, number] = [this.innerWidth <= 800 ? this.innerWidth - 60 : 1200, 700];
   chartWidth: number;
+  filteredHistologies: number[] = [];
 
   // chart settings
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
@@ -54,6 +55,9 @@ export class DimRedPlotComponent implements OnInit {
     }
   };
   scatterChartOptions: ChartConfiguration['options'] = {
+    animation: {
+      // duration: 0
+    },
     responsive: true,
     scales: {
       x: {
@@ -92,51 +96,161 @@ export class DimRedPlotComponent implements OnInit {
           color: '#A8A8A8'
         },
         onClick: function(e, legendItem) {
-          var index = legendItem.datasetIndex;
-          var ci = this.chart;
-          var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;       
-          var anyOthersAlreadyHidden = false;
-          var allOthersHidden = true;
-        
-          // figure out the current state of the labels
-          ci.data.datasets.forEach(function(e, i) {
-            var meta = ci.getDatasetMeta(i);
-        
-            if (i !== index) {
-              if (meta.hidden) {
-                anyOthersAlreadyHidden = true;
-              } else {
-                allOthersHidden = false;
+          var currentIndex = legendItem.datasetIndex;
+          var chart = this.chart;
+          var currentState: any[] = [];
+          chart.data.datasets.forEach(function(e, i) {
+            var meta = chart.getDatasetMeta(i);
+            currentState.push({ index: i, hidden: (meta.hidden == null ? false : meta.hidden) });
+          });
+
+          var isCurrentlyHidden = currentState.filter(function (element, index, array) { 
+            return (element.index == currentIndex); 
+          })[0].hidden;
+
+          var totalHiddenCount = currentState.filter(function (element, index, array) {
+            return (element.hidden)
+          }).length;
+
+          console.log(isCurrentlyHidden);
+          console.log(totalHiddenCount);
+
+          chart.data.datasets.forEach(function(e, i) {
+            var meta = chart.getDatasetMeta(i);
+            if (i === currentIndex) { // this is the one we clicked on
+              if (!isCurrentlyHidden && totalHiddenCount === 0) {
+                hideAllExcept([ i ]);
+              }
+              else if (!isCurrentlyHidden && totalHiddenCount > 0) {
+                console.log("hide individual");
+                meta.hidden = true;
+              }
+              else if (isCurrentlyHidden) {
+                var indeces: number[] = [];
+                indeces.push(i);
+                currentState.forEach(x => {
+                  if (x.hidden == false) {
+                    indeces.push(x.index);
+                  }
+                });
+
+                hideAllExcept(indeces);
+              }
+              else {
+                unhideAll();
               }
             }
           });
-        
-          // if the label we clicked is already hidden 
-          // then we now want to unhide (with any others already unhidden)
-          if (alreadyHidden) {
-            ci.getDatasetMeta(index).hidden = false;
-          } else { 
-            // otherwise, lets figure out how to toggle visibility based upon the current state
-            ci.data.datasets.forEach(function(e, i) {
-              var meta = ci.getDatasetMeta(i);
-        
-              if (i !== index) {
-                // handles logic when we click on visible hidden label and there is currently at least
-                // one other label that is visible and at least one other label already hidden
-                // (we want to keep those already hidden still hidden)
-                if (anyOthersAlreadyHidden && !allOthersHidden) {
-                  meta.hidden = true;
-                } else {
-                  // toggle visibility
-                  meta.hidden = meta.hidden === false ? !meta.hidden : false;
-                }
-              } else {
+
+          chart.update();
+
+          function hideAll() {
+            chart.data.datasets.forEach(function(e, i) {
+              var meta = chart.getDatasetMeta(i);
+              meta.hidden = true;
+            });
+          }
+
+          function hideAllExcept(indeces: number[]) {
+            chart.data.datasets.forEach(function(e, i) {
+              var meta = chart.getDatasetMeta(i);
+              if (!indeces.includes(i)) {
+                meta.hidden = true;
+              }
+              else {
                 meta.hidden = false;
               }
             });
           }
+
+          function unhideAll() {
+            chart.data.datasets.forEach(function(e, i) {
+              var meta = chart.getDatasetMeta(i);
+              meta.hidden = false;
+            });
+          }
+
+          // var areAllOthersHidden = false;
+          // var hiddenCount = 0;
+          // chart.data.datasets.forEach(function(e, i) {
+          //   var meta = chart.getDatasetMeta(i);
+
+          //   currentState.push({ index: i, hidden: meta.hidden });
+
+          //   if (i !== index && meta.hidden == true) {
+          //     hiddenCount++;
+          //   }
+          // });
+          // if (hiddenCount === chart.data.datasets.length - 1) {
+          //   areAllOthersHidden = true;
+          // }
+
+          // console.log(currentState);
+
+          // chart.data.datasets.forEach(function(e, i) {
+          //   var meta = chart.getDatasetMeta(i);
+          //   if (i !== currentIndex) { // these are the ones we didn't click on
+          //     // if (areAllOthersHidden) {
+          //     //   meta.hidden = false;
+          //     // }
+          //     // else {
+          //     //   meta.hidden = true;
+          //     // }
+          //   }
+          //   else { // this is the one we clicked on
+          //     if (isCurrentlyHidden) {
+          //       meta.hidden = false;
+          //     }
+          //   }
+          // });
+
+          // chart.update();
+
+          // var index = legendItem.datasetIndex;
+          // var ci = this.chart;
+          // var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;       
+          // var anyOthersAlreadyHidden = false;
+          // var allOthersHidden = true;
         
-          ci.update();
+          // // figure out the current state of the labels
+          // ci.data.datasets.forEach(function(e, i) {
+          //   var meta = ci.getDatasetMeta(i);
+        
+          //   if (i !== index) {
+          //     if (meta.hidden) {
+          //       anyOthersAlreadyHidden = true;
+          //     } else {
+          //       allOthersHidden = false;
+          //     }
+          //   }
+          // });
+        
+          // // if the label we clicked is already hidden 
+          // // then we now want to unhide (with any others already unhidden)
+          // if (alreadyHidden) {
+          //   ci.getDatasetMeta(index).hidden = false;
+          // } else { 
+          //   // otherwise, lets figure out how to toggle visibility based upon the current state
+          //   ci.data.datasets.forEach(function(e, i) {
+          //     var meta = ci.getDatasetMeta(i);
+        
+          //     if (i !== index) {
+          //       // handles logic when we click on visible hidden label and there is currently at least
+          //       // one other label that is visible and at least one other label already hidden
+          //       // (we want to keep those already hidden still hidden)
+          //       if (anyOthersAlreadyHidden && !allOthersHidden) {
+          //         meta.hidden = true;
+          //       } else {
+          //         // toggle visibility
+          //         meta.hidden = meta.hidden === false ? !meta.hidden : false;
+          //       }
+          //     } else {
+          //       meta.hidden = false;
+          //     }
+          //   });
+          // }
+        
+          // ci.update();
         }
       },
       zoom: {
