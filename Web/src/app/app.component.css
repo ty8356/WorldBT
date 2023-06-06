@@ -6,3 +6,18 @@ footer a {
 footer a:hover {
     color: skyblue;
 }
+
+mat-sidenav {
+    padding-top: 50px;
+    width: 200px;
+    background-color: #191919;
+}
+
+a.mat-list-item {
+    color: lightgrey;
+}
+
+mat-sidenav-container {
+    background-color: #282828;
+    height: 100vh;
+}

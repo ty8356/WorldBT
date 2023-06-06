@@ -33,13 +33,13 @@ namespace WorldBT.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             services.AddAuthentication(
                 CertificateAuthenticationDefaults.AuthenticationScheme)
                 .AddCertificate();
 
             services.AddControllers();
-
-            services.AddCors(); 
 
             services.AddMvc(config =>
             {
@@ -69,16 +69,13 @@ namespace WorldBT.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseRouting();
+
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
             app.UseAuthentication();
 
-            app.UseCors(options => options
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
-
             // app.UseHttpsRedirection();
-
-            app.UseRouting();
 
             app.UseAuthorization();
 

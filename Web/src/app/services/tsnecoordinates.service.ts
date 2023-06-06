@@ -15,8 +15,8 @@ export class TsneCoordinatesService {
     constructor(
         private http: HttpClient
     ) {
-        // this.baseUrl = `api/tsne-coordinates`;
-        this.baseUrl = `http://localhost:5000/tsne-coordinates`;
+        // /* publish me! */ this.baseUrl = `api/tsne-coordinates`;
+        /* test local with me! */  this.baseUrl = `http://localhost:5000/tsne-coordinates`;
     }
 
     fetchAll(): Observable<TsneCoordinate[]> {
