@@ -2,6 +2,9 @@
   
   <div class="one-line-header">
     <h2 class="title">Brain Tumor Map</h2>
+    <div>
+      <button mat-raised-button (click)="refreshChart()" class="reset-button">Reset Chart</button>
+    </div>
   </div>
 
   <div class="chart-container" [style.width.px]="chartWidth">
@@ -12,6 +15,8 @@
       >
     </canvas>
   </div>
+
+  <div id="chart-legend" class="chart-legend"></div>
   
 </div>
 

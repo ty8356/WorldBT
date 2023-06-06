@@ -17,7 +17,8 @@ import { MatMenuModule} from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { NgxSpinnerModule } from "ngx-spinner"; 
-import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { NgChartsModule } from 'ng2-charts';
@@ -45,11 +46,13 @@ import { NgChartsModule } from 'ng2-charts';
     MatSelectModule,
     NgxSpinnerModule,
     MatSidenavModule,
+    MatListModule,
     MatNativeDateModule,
     MatSliderModule,
     NgChartsModule,
     RouterModule.forRoot([
-      {path: '', component: DimRedPlotComponent}
+      {path: '', component: DimRedPlotComponent},
+      {path: 'survival', component: DimRedPlotComponent}
     ])
   ],
   providers: [],

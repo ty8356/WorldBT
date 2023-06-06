@@ -6,12 +6,24 @@
     routerLink="/"
     class="uofl-logo"
   />
-  <span class="nav-header">The World of All Brain Tumors - Gene Expression Database</span>
+  <span class="nav-header">The World of All Brain Tumors</span>
 </div>
 
-<div class="content" role="main">
+<div class="main-content" role="main">
 
-  <router-outlet></router-outlet>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="side" opened="true">
+      <mat-nav-list>
+        <a mat-list-item [routerLink]="'/'"> Brain Tumor Map </a>
+        <a mat-list-item [routerLink]="'/survival'"> Survival </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 
   <footer>
       <p class="footer-text">The World of All Brain Tumors created in 2022. Submit bugs <a href="https://forms.gle/WFnghDDdSXZ4h89o8" target="_blank">here</a>.</p>

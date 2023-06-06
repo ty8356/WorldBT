@@ -91,6 +91,7 @@ export class DimRedPlotComponent implements OnInit {
       },
       legend: {
         position: 'left',
+        align: 'start',
         labels: {
           boxWidth: 15,
           color: '#A8A8A8'
@@ -169,88 +170,6 @@ export class DimRedPlotComponent implements OnInit {
               meta.hidden = false;
             });
           }
-
-          // var areAllOthersHidden = false;
-          // var hiddenCount = 0;
-          // chart.data.datasets.forEach(function(e, i) {
-          //   var meta = chart.getDatasetMeta(i);
-
-          //   currentState.push({ index: i, hidden: meta.hidden });
-
-          //   if (i !== index && meta.hidden == true) {
-          //     hiddenCount++;
-          //   }
-          // });
-          // if (hiddenCount === chart.data.datasets.length - 1) {
-          //   areAllOthersHidden = true;
-          // }
-
-          // console.log(currentState);
-
-          // chart.data.datasets.forEach(function(e, i) {
-          //   var meta = chart.getDatasetMeta(i);
-          //   if (i !== currentIndex) { // these are the ones we didn't click on
-          //     // if (areAllOthersHidden) {
-          //     //   meta.hidden = false;
-          //     // }
-          //     // else {
-          //     //   meta.hidden = true;
-          //     // }
-          //   }
-          //   else { // this is the one we clicked on
-          //     if (isCurrentlyHidden) {
-          //       meta.hidden = false;
-          //     }
-          //   }
-          // });
-
-          // chart.update();
-
-          // var index = legendItem.datasetIndex;
-          // var ci = this.chart;
-          // var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;       
-          // var anyOthersAlreadyHidden = false;
-          // var allOthersHidden = true;
-        
-          // // figure out the current state of the labels
-          // ci.data.datasets.forEach(function(e, i) {
-          //   var meta = ci.getDatasetMeta(i);
-        
-          //   if (i !== index) {
-          //     if (meta.hidden) {
-          //       anyOthersAlreadyHidden = true;
-          //     } else {
-          //       allOthersHidden = false;
-          //     }
-          //   }
-          // });
-        
-          // // if the label we clicked is already hidden 
-          // // then we now want to unhide (with any others already unhidden)
-          // if (alreadyHidden) {
-          //   ci.getDatasetMeta(index).hidden = false;
-          // } else { 
-          //   // otherwise, lets figure out how to toggle visibility based upon the current state
-          //   ci.data.datasets.forEach(function(e, i) {
-          //     var meta = ci.getDatasetMeta(i);
-        
-          //     if (i !== index) {
-          //       // handles logic when we click on visible hidden label and there is currently at least
-          //       // one other label that is visible and at least one other label already hidden
-          //       // (we want to keep those already hidden still hidden)
-          //       if (anyOthersAlreadyHidden && !allOthersHidden) {
-          //         meta.hidden = true;
-          //       } else {
-          //         // toggle visibility
-          //         meta.hidden = meta.hidden === false ? !meta.hidden : false;
-          //       }
-          //     } else {
-          //       meta.hidden = false;
-          //     }
-          //   });
-          // }
-        
-          // ci.update();
         }
       },
       zoom: {
@@ -259,12 +178,14 @@ export class DimRedPlotComponent implements OnInit {
         },
         zoom: {
           wheel: {
-            enabled: true
+            enabled: true,
+            speed: 0.05
           },
           mode: "xy"
         },
         limits: {
-
+          x: {min: -100, max: 100},
+          y: {min: -100, max: 100}
         }
       }
     }
@@ -287,7 +208,7 @@ export class DimRedPlotComponent implements OnInit {
   ngOnInit(): void {
     this.spinnerService.show();
     this.innerWidth = window.innerWidth;
-    this.chartWidth = this.innerWidth * 0.85;
+    this.chartWidth = (this.innerWidth * 0.8) - 65;
 
     var rainbowColors = this.colorHelperService.RainbowCreate(60);
 
@@ -321,15 +242,31 @@ export class DimRedPlotComponent implements OnInit {
         });
 
         this.chart.chart?.update();
+
+        // document.getElementsByClassName('chart-legend')[0].innerHTML = this.dataset.
+
+        // document.getElementById('js-legend')?.innerHTML = myChart.generateLegend();
+
         this.spinnerService.hide();
 
       });
   }
 
+  refreshChart() {
+    for (var i = 0; i < (this.chart.chart?.data.datasets.length ?? 0); i++) {
+      var meta = this.chart.chart?.getDatasetMeta(i);
+      if (meta != undefined)
+        meta.hidden = false;
+    }
+
+    this.chart.chart?.update();
+    this.chart.chart?.resetZoom();
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = window.innerWidth;
-    this.chartWidth = this.innerWidth * 0.85;
+    this.chartWidth = (this.innerWidth * 0.8) - 65;
   }
 
 }
