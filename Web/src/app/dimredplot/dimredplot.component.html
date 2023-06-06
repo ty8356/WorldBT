@@ -7,16 +7,29 @@
     </div>
   </div>
 
-  <div class="chart-container" [style.width.px]="chartWidth">
-    <canvas baseChart
-      [data]="scatterChartData"
-      [options]="scatterChartOptions"
-      [type]="scatterChartType"
-      >
-    </canvas>
+  <div class="one-line">
+    <div class="chart-container" [style.width.px]="chartWidth" [style.height.px]="chartHeight">
+      <canvas baseChart
+        [data]="scatterChartData"
+        [options]="scatterChartOptions"
+        [type]="scatterChartType"
+        >
+      </canvas>
+    </div>
+  
+    <div class="scrollable-legend" [style.height.px]="chartHeight">
+      <div class="chart-legend" *ngIf="chart?.chart as scatterChart">
+        <div class="chart-legend-item" *ngFor="let item of chart?.chart?.legend?.legendItems" (click)="onLegendItemClick($event, item)">
+          <span class="chart-legend-item-color" [ngStyle]="{ background: item.fillStyle }"></span>
+          <span class="chart-legend-item-text" [ngClass]="{ 'chart-legend-item-text-active-filter': isItemFilterActive(item) || isBeforeFilter == true, 'chart-legend-item-text-inactive-filter': !isItemFilterActive(item) }">
+            {{ item.text }}
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div id="chart-legend" class="chart-legend"></div>
+  
   
 </div>
 
