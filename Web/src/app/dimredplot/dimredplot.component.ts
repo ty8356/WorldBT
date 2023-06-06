@@ -1,9 +1,9 @@
-import { Component, OnInit, TemplateRef, HostListener, ViewChild, ViewChildren, QueryList, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, TemplateRef, HostListener, ViewChild, ViewChildren, QueryList, ElementRef, Renderer2, Input, Output, EventEmitter } from '@angular/core';
 import { NgxSpinnerService } from "ngx-spinner";
 import { TsneCoordinatesService } from '../services/tsnecoordinates.service';
 import { TsneCoordinate } from '../models/tsneCoordinate';
 import { HistologiesService } from '../services/histologies.service';
-import { Chart, ChartConfiguration, ChartData, ChartDataset, ChartEvent, ChartType } from 'chart.js';
+import { Chart, ChartConfiguration, ChartData, ChartDataset, ChartEvent, ChartType, LegendItem } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import zoomPlugin from "chartjs-plugin-zoom";
 import { ColorHelperService } from '../services/colorhelper.service';
@@ -20,9 +20,19 @@ Chart.register(zoomPlugin);
 export class DimRedPlotComponent implements OnInit {
 
   innerWidth: number = window.innerWidth;
+  innerHeight: number = window.outerHeight;
   view: [number, number] = [this.innerWidth <= 800 ? this.innerWidth - 60 : 1200, 700];
   chartWidth: number;
+  chartHeight: number;
   filteredHistologies: number[] = [];
+  private activeFilters: { [filterKey: string]: boolean } = {};
+  isBeforeFilter: boolean = true;
+
+  @Input() legendLabels: Array<string>;
+
+  @Output() legendClick: EventEmitter<{
+    [filterKey: string]: boolean;
+  }> = new EventEmitter();
 
   // chart settings
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
@@ -51,6 +61,7 @@ export class DimRedPlotComponent implements OnInit {
 
     } 
     else {
+      // console.log(tooltipItems);
       return 'Histology: ' + tooltipItems[0].dataset.label;
     }
   };
@@ -59,6 +70,7 @@ export class DimRedPlotComponent implements OnInit {
       // duration: 0
     },
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: {
         ticks: {
@@ -92,84 +104,10 @@ export class DimRedPlotComponent implements OnInit {
       legend: {
         position: 'left',
         align: 'start',
+        display: false,
         labels: {
           boxWidth: 15,
           color: '#A8A8A8'
-        },
-        onClick: function(e, legendItem) {
-          var currentIndex = legendItem.datasetIndex;
-          var chart = this.chart;
-          var currentState: any[] = [];
-          chart.data.datasets.forEach(function(e, i) {
-            var meta = chart.getDatasetMeta(i);
-            currentState.push({ index: i, hidden: (meta.hidden == null ? false : meta.hidden) });
-          });
-
-          var isCurrentlyHidden = currentState.filter(function (element, index, array) { 
-            return (element.index == currentIndex); 
-          })[0].hidden;
-
-          var totalHiddenCount = currentState.filter(function (element, index, array) {
-            return (element.hidden)
-          }).length;
-
-          console.log(isCurrentlyHidden);
-          console.log(totalHiddenCount);
-
-          chart.data.datasets.forEach(function(e, i) {
-            var meta = chart.getDatasetMeta(i);
-            if (i === currentIndex) { // this is the one we clicked on
-              if (!isCurrentlyHidden && totalHiddenCount === 0) {
-                hideAllExcept([ i ]);
-              }
-              else if (!isCurrentlyHidden && totalHiddenCount > 0) {
-                console.log("hide individual");
-                meta.hidden = true;
-              }
-              else if (isCurrentlyHidden) {
-                var indeces: number[] = [];
-                indeces.push(i);
-                currentState.forEach(x => {
-                  if (x.hidden == false) {
-                    indeces.push(x.index);
-                  }
-                });
-
-                hideAllExcept(indeces);
-              }
-              else {
-                unhideAll();
-              }
-            }
-          });
-
-          chart.update();
-
-          function hideAll() {
-            chart.data.datasets.forEach(function(e, i) {
-              var meta = chart.getDatasetMeta(i);
-              meta.hidden = true;
-            });
-          }
-
-          function hideAllExcept(indeces: number[]) {
-            chart.data.datasets.forEach(function(e, i) {
-              var meta = chart.getDatasetMeta(i);
-              if (!indeces.includes(i)) {
-                meta.hidden = true;
-              }
-              else {
-                meta.hidden = false;
-              }
-            });
-          }
-
-          function unhideAll() {
-            chart.data.datasets.forEach(function(e, i) {
-              var meta = chart.getDatasetMeta(i);
-              meta.hidden = false;
-            });
-          }
         }
       },
       zoom: {
@@ -194,7 +132,6 @@ export class DimRedPlotComponent implements OnInit {
     datasets: [],
   };
   dataset: ChartDataset<'scatter'>;
-  
 
   constructor(
     public spinnerService: NgxSpinnerService, 
@@ -208,7 +145,9 @@ export class DimRedPlotComponent implements OnInit {
   ngOnInit(): void {
     this.spinnerService.show();
     this.innerWidth = window.innerWidth;
-    this.chartWidth = (this.innerWidth * 0.8) - 65;
+    this.innerHeight = window.innerHeight;
+    this.chartWidth = (this.innerWidth * 0.7) - 65;
+    this.chartHeight = (this.innerHeight * 0.98) - 135;
 
     var rainbowColors = this.colorHelperService.RainbowCreate(60);
 
@@ -243,10 +182,6 @@ export class DimRedPlotComponent implements OnInit {
 
         this.chart.chart?.update();
 
-        // document.getElementsByClassName('chart-legend')[0].innerHTML = this.dataset.
-
-        // document.getElementById('js-legend')?.innerHTML = myChart.generateLegend();
-
         this.spinnerService.hide();
 
       });
@@ -259,14 +194,119 @@ export class DimRedPlotComponent implements OnInit {
         meta.hidden = false;
     }
 
+    this.isBeforeFilter = true;
+    this.activeFilters = {};
+
     this.chart.chart?.update();
     this.chart.chart?.resetZoom();
+  }
+
+  public onLegendItemClick(e: Event, legendItem: LegendItem): void {
+    // console.log(legendItem);
+    this.isBeforeFilter = false;
+
+    const filterKey = legendItem.text.replace(" ", "_");
+    this.activeFilters[filterKey] = this.activeFilters[filterKey]
+      ? false
+      : true;
+
+    this.legendClick.emit(this.activeFilters);
+
+    console.log(this.activeFilters);
+
+    var currentIndex = legendItem.datasetIndex;
+    var chart = this.chart.chart;
+    var currentState: any[] = [];
+    if (chart == undefined) return;
+
+    chart.data.datasets.forEach(function(e, i) {
+      var meta = chart?.getDatasetMeta(i);
+      currentState.push({ index: i, hidden: (meta?.hidden == null ? false : meta.hidden) });
+    });
+
+    var isCurrentlyHidden = currentState.filter(function (element, index, array) { 
+      return (element.index == currentIndex); 
+    })[0].hidden;
+
+    var totalHiddenCount = currentState.filter(function (element, index, array) {
+      return (element.hidden)
+    }).length;
+
+    // console.log(isCurrentlyHidden);
+    // console.log(totalHiddenCount);
+
+    chart.data.datasets.forEach(function(e, i) {
+      var meta = chart?.getDatasetMeta(i);
+      if (i === currentIndex) { // this is the one we clicked on
+        if (!isCurrentlyHidden && totalHiddenCount === 0) {
+          hideAllExcept([ i ]);
+        }
+        else if (!isCurrentlyHidden && totalHiddenCount > 0 && meta != undefined) {
+          // console.log("hide individual");
+          meta.hidden = true;
+        }
+        else if (isCurrentlyHidden) {
+          var indeces: number[] = [];
+          indeces.push(i);
+          currentState.forEach(x => {
+            if (x.hidden == false) {
+              indeces.push(x.index);
+            }
+          });
+
+          hideAllExcept(indeces);
+        }
+        else {
+          unhideAll();
+        }
+      }
+    });
+
+    chart.update();
+
+    function hideAll() {
+      chart?.data.datasets.forEach(function(e, i) {
+        var meta = chart?.getDatasetMeta(i);
+        if (meta != undefined)
+          meta.hidden = true;
+      });
+    }
+
+    function hideAllExcept(indeces: number[]) {
+      chart?.data.datasets.forEach(function(e, i) {
+        var meta = chart?.getDatasetMeta(i);
+        if (!indeces.includes(i) && meta != undefined) {
+          meta.hidden = true;
+        }
+        else {
+          if (meta != undefined) {
+            meta.hidden = false;
+          }
+        }
+      });
+    }
+
+    function unhideAll() {
+      chart?.data.datasets.forEach(function(e, i) {
+        var meta = chart?.getDatasetMeta(i);
+        if (meta != undefined) {
+          meta.hidden = false;
+        }
+      });
+    }
+  }
+
+  public isItemFilterActive(item: LegendItem): boolean {
+    const filterKey = item.text.replace(" ", "_");
+    return this.activeFilters[filterKey];
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = window.innerWidth;
-    this.chartWidth = (this.innerWidth * 0.8) - 65;
+    this.innerHeight = window.innerHeight;
+    this.chartWidth = (this.innerWidth * 0.7) - 65;
+    this.chartHeight = (this.innerHeight * 0.98) - 135;
   }
 
 }
