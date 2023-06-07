@@ -41,6 +41,8 @@ namespace WorldBT.Services
                 .TsneCoordinates
                 .Include(x => x.Patient.Histology)
                 .Include(x => x.Patient.Location)
+                .Include(x => x.Patient.Subgroup)
+                .Include(x => x.Patient.TissueType)
                 .OrderBy(x => x.Patient.Histology.Name)
                 .ToList();
 
