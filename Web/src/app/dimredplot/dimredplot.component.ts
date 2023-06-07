@@ -154,10 +154,7 @@ export class DimRedPlotComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinnerService.show();
-    this.innerWidth = window.innerWidth;
-    this.innerHeight = window.innerHeight;
-    this.chartWidth = (this.innerWidth * 0.7) - 65;
-    this.chartHeight = (this.innerHeight * 0.98) - 135;
+    this.setChartDimensions();
 
     var rainbowColors = this.colorHelperService.RainbowCreate(60);
 
@@ -232,7 +229,7 @@ export class DimRedPlotComponent implements OnInit {
 
     this.legendClick.emit(this.activeFilters);
 
-    console.log(this.activeFilters);
+    // console.log(this.activeFilters);
 
     var currentIndex = legendItem.datasetIndex;
     var chart = this.chart.chart;
@@ -321,12 +318,16 @@ export class DimRedPlotComponent implements OnInit {
     return this.activeFilters[filterKey];
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  setChartDimensions() {
     this.innerWidth = window.innerWidth;
     this.innerHeight = window.innerHeight;
     this.chartWidth = (this.innerWidth * 0.7) - 65;
     this.chartHeight = (this.innerHeight * 0.98) - 135;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.setChartDimensions();
   }
 
 }
