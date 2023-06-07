@@ -22,11 +22,13 @@ import { MatListModule } from '@angular/material/list';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { NgChartsModule } from 'ng2-charts';
+import { SurvivalComponent } from './survival/survival.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DimRedPlotComponent,
+    SurvivalComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +54,7 @@ import { NgChartsModule } from 'ng2-charts';
     NgChartsModule,
     RouterModule.forRoot([
       {path: '', component: DimRedPlotComponent},
-      {path: 'survival', component: DimRedPlotComponent}
+      {path: 'survival', component: SurvivalComponent}
     ])
   ],
   providers: [],

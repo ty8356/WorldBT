@@ -52,6 +52,54 @@
             "options": {
                 "cwd": "${workspaceFolder}/Web"
             }
+        },
+        {
+            "label": "run_rpi",
+            "type": "R",
+            "code": [
+                "path <- './Rpi/'",
+                "src <- source('./Rpi/server.R')",
+                "print(src)"
+            ],
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                  "pattern": [
+                    {
+                      "regexp": ".",
+                      "file": 1,
+                      "location": 2,
+                      "message": 3
+                    }
+                  ],
+                  "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".",
+                    "endsPattern": ".",
+                  }
+                }
+            ]
+        },
+        {
+            "label": "terminate_api",
+            "command": "echo ${input:terminate}",
+            "type": "shell",
+            "problemMatcher": []
+        },
+        {
+            "label": "run_backend",
+            "dependsOn": [
+                "run_rpi",
+                "api_build"
+            ]
+        }
+    ],
+    "inputs": [
+        {
+          "id": "terminate",
+          "type": "command",
+          "command": "workbench.action.tasks.terminate",
+          "args": "terminateAll"
         }
     ]
 }
