@@ -3,11 +3,12 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { TsneCoordinatesService } from '../services/tsnecoordinates.service';
 import { TsneCoordinate } from '../models/tsneCoordinate';
 import { HistologiesService } from '../services/histologies.service';
-import { Chart, ChartConfiguration, ChartData, ChartDataset, ChartEvent, ChartType, LegendItem } from 'chart.js';
+import { Chart, ChartConfiguration, ChartData, ChartDataset, ChartEvent, ChartType, LegendItem, ScatterDataPoint } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import zoomPlugin from "chartjs-plugin-zoom";
 import { ColorHelperService } from '../services/colorhelper.service';
 import * as Color from 'color';
+import { ScatterDataPointCustom } from '../interfaces/ScatterDataPointCustom';
 
 Chart.register(zoomPlugin);
 
@@ -57,12 +58,21 @@ export class DimRedPlotComponent implements OnInit {
 
       });
 
+      histString += '\nZoom in to see details.'
+
       return histString;
 
     } 
     else {
-      // console.log(tooltipItems);
-      return 'Histology: ' + tooltipItems[0].dataset.label;
+      var histology = tooltipItems[0].dataset.label;
+      var location = tooltipItems[0].dataset.data[0].location;
+      var subgroup = tooltipItems[0].dataset.data[0].subgroup;
+      var tissueType = tooltipItems[0].dataset.data[0].tissueType;
+
+      var returnString = 'Histology: ' + histology + '\nLocation: ' + location + '\nSubgroup: ' + subgroup + '\nTissue Type: ' + tissueType;
+
+      // return 'Histology: ' + tooltipItems[0].dataset.label;
+      return returnString;
     }
   };
   scatterChartOptions: ChartConfiguration['options'] = {
@@ -170,7 +180,17 @@ export class DimRedPlotComponent implements OnInit {
 
           group.TsneCoordinates.forEach(coord => {
             
-            this.dataset.data.push({ x: coord.X, y: coord.Y });
+            let point: ScatterDataPointCustom = {
+              x: coord.X,
+              y: coord.Y,
+              location: coord.Patient?.Location?.Name ?? '',
+              subgroup: coord.Patient?.Subgroup?.Name ?? '',
+              tissueType: coord.Patient?.TissueType?.Name ?? ''
+            };
+
+            this.dataset.data.push(point);
+
+            // this.dataset.data.push({ x: coord.X, y: coord.Y });
 
           });
 
