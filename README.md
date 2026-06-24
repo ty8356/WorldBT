@@ -1,0 +1,1 @@
+This is a proof of concept app built in Angular, with .NET Core backend API integrated with a separate custom R API used for statistical analysis, allowing for manipulation and visualization of tens of thousands of datapoints.
